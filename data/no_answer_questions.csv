@@ -1,0 +1,21 @@
+question_id,document_id,title,source_url,question_type,question,reference_answer,supporting_text_1,supporting_text_2,verification_status
+31,0,Mozambique,https://en.wikipedia.org/wiki/Mozambique,no_answer,What is Mozambique's national animal?,No answer is provided in the document.,,,verified
+32,1,Tanzania,https://en.wikipedia.org/wiki/Tanzania,no_answer,What is Tanzania's national flower?,No answer is provided in the document.,,,verified
+33,2,South Africa,https://en.wikipedia.org/wiki/South_Africa,no_answer,What is South Africa's national flower?,No answer is provided in the document.,,,verified
+34,3,Eswatini,https://en.wikipedia.org/wiki/Eswatini,no_answer,What is Eswatini's national animal?,No answer is provided in the document.,,,verified
+35,4,Lesotho,https://en.wikipedia.org/wiki/Lesotho,no_answer,What is Lesotho's national animal?,No answer is provided in the document.,,,verified
+36,5,Zimbabwe,https://en.wikipedia.org/wiki/Zimbabwe,no_answer,What is Zimbabwe's national flower?,No answer is provided in the document.,,,verified
+37,6,Malawi,https://en.wikipedia.org/wiki/Malawi,no_answer,What is Malawi's national flower?,No answer is provided in the document.,,,verified
+38,7,Kenya,https://en.wikipedia.org/wiki/Kenya,no_answer,What is Kenya's national flower?,No answer is provided in the document.,,,verified
+39,8,Botswana,https://en.wikipedia.org/wiki/Botswana,no_answer,What is Botswana's national flower?,No answer is provided in the document.,,,verified
+40,9,Angola,https://en.wikipedia.org/wiki/Angola,no_answer,What is Angola's national animal?,No answer is provided in the document.,,,verified
+51,0,Mozambique,https://en.wikipedia.org/wiki/Mozambique,no_answer,What is Mozambique's national bird?,No answer is provided in the document.,,,verified
+52,1,Tanzania,https://en.wikipedia.org/wiki/Tanzania,no_answer,What is Tanzania's national bird?,No answer is provided in the document.,,,verified
+53,2,South Africa,https://en.wikipedia.org/wiki/South_Africa,no_answer,What is South Africa's national bird?,No answer is provided in the document.,,,verified
+54,3,Eswatini,https://en.wikipedia.org/wiki/Eswatini,no_answer,What is Eswatini's national bird?,No answer is provided in the document.,,,verified
+55,4,Lesotho,https://en.wikipedia.org/wiki/Lesotho,no_answer,What is Lesotho's national bird?,No answer is provided in the document.,,,verified
+56,5,Zimbabwe,https://en.wikipedia.org/wiki/Zimbabwe,no_answer,What is Zimbabwe's national bird?,No answer is provided in the document.,,,verified
+57,6,Malawi,https://en.wikipedia.org/wiki/Malawi,no_answer,What is Malawi's national bird?,No answer is provided in the document.,,,verified
+58,7,Kenya,https://en.wikipedia.org/wiki/Kenya,no_answer,What is Kenya's national bird?,No answer is provided in the document.,,,verified
+59,8,Botswana,https://en.wikipedia.org/wiki/Botswana,no_answer,What is Botswana's national bird?,No answer is provided in the document.,,,verified
+60,9,Angola,https://en.wikipedia.org/wiki/Angola,no_answer,What is Angola's national bird?,No answer is provided in the document.,,,verified

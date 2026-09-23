@@ -1,0 +1,61 @@
+question_id,document_id,title,question_type,question,verification_status,verification_note
+1,0,Mozambique,single_passage,What is the capital and largest city of Mozambique?,verified,Reference answer and supporting passage were checked against the source document.
+2,0,Mozambique,single_passage,What is the most popular sport in Mozambique?,verified,Reference answer and supporting passage were checked against the source document.
+3,1,Tanzania,single_passage,What are the two regions whose union formed the United Republic of Tanzania in 1964?,verified,Reference answer and supporting passage were checked against the source document.
+4,1,Tanzania,single_passage,What is Tanzania's national animal?,verified,Reference answer and supporting passage were checked against the source document.
+5,2,South Africa,single_passage,What are the three capitals of South Africa and their respective roles?,verified,Reference answer and supporting passage were checked against the source document.
+6,2,South Africa,single_passage,How many provinces does South Africa have?,verified,Reference answer and supporting passage were checked against the source document.
+7,3,Eswatini,single_passage,When did Eswatini regain full independence?,verified,Reference answer and supporting passage were checked against the source document.
+8,3,Eswatini,single_passage,What are Eswatini's two official languages?,verified,Reference answer and supporting passage were checked against the source document.
+9,4,Lesotho,single_passage,What is the capital and largest city of Lesotho?,verified,Reference answer and supporting passage were checked against the source document.
+10,4,Lesotho,single_passage,What is Lesotho's official currency?,verified,Reference answer and supporting passage were checked against the source document.
+11,5,Zimbabwe,single_passage,What is the capital and largest city of Zimbabwe?,verified,Reference answer and supporting passage were checked against the source document.
+12,5,Zimbabwe,single_passage,How many official languages does Zimbabwe have?,verified,Reference answer and supporting passage were checked against the source document.
+13,6,Malawi,single_passage,What is the capital and largest city of Malawi?,verified,Reference answer and supporting passage were checked against the source document.
+14,6,Malawi,single_passage,In what year did Malawi become independent and what was the territory called immediately before independence?,verified,Reference answer and supporting passage were checked against the source document.
+15,7,Kenya,single_passage,What is the capital and largest city of Kenya?,verified,Reference answer and supporting passage were checked against the source document.
+16,7,Kenya,single_passage,What does the Kenya Certificate of Secondary Education (KCSE) determine for students who take it?,verified,Reference answer and supporting passage were checked against the source document.
+17,8,Botswana,single_passage,What is the capital and largest city of Botswana?,verified,Reference answer and supporting passage were checked against the source document.
+18,8,Botswana,single_passage,Approximately what percentage of Botswana's territory is part of the Kalahari Desert?,verified,Reference answer and supporting passage were checked against the source document.
+19,9,Angola,single_passage,What is the capital and most populous city of Angola?,verified,Reference answer and supporting passage were checked against the source document.
+20,9,Angola,single_passage,What is Angola's official language?,verified,Reference answer and supporting passage were checked against the source document.
+21,0,Mozambique,multi_passage,How did Portuguese arrival and the post-independence civil war shape Mozambique's modern history?,verified,Both supporting passages were checked against the source document.
+22,1,Tanzania,multi_passage,"How did Tanganyika and Zanzibar become Tanzania, and what does the article say about Tanzania's linguistic diversity?",verified,Both supporting passages were checked against the source document.
+23,2,South Africa,multi_passage,How did apartheid and the 1994 elections affect political representation in South Africa?,verified,Both supporting passages were checked against the source document.
+24,3,Eswatini,multi_passage,What does the article say about Eswatini's political system and the sectors providing most employment?,verified,Both supporting passages were checked against the source document.
+25,4,Lesotho,multi_passage,How are Lesotho's high elevation and rainfall pattern described in the article?,verified,Both supporting passages were checked against the source document.
+26,5,Zimbabwe,multi_passage,How does the article connect Great Zimbabwe's early history with the later establishment of Rhodesia?,verified,Both supporting passages were checked against the source document.
+27,6,Malawi,multi_passage,How did Malawi's political system and economy develop in the periods described in the article?,verified,Both supporting passages were checked against the source document.
+28,7,Kenya,multi_passage,How do Kenya's two main education examinations described in the article affect students' progression?,verified,Both supporting passages were checked against the source document.
+29,8,Botswana,multi_passage,How are Botswana's physical geography and mining economy characterised in the article?,verified,Both supporting passages were checked against the source document.
+30,9,Angola,multi_passage,How are Angola's independence and its main economic resources described in the article?,verified,Both supporting passages were checked against the source document.
+31,0,Mozambique,no_answer,What is Mozambique's national animal?,verified,The requested attribute is not explicitly stated in the source document.
+32,1,Tanzania,no_answer,What is Tanzania's national flower?,verified,The requested attribute is not explicitly stated in the source document.
+33,2,South Africa,no_answer,What is South Africa's national flower?,verified,The requested attribute is not explicitly stated in the source document.
+34,3,Eswatini,no_answer,What is Eswatini's national animal?,verified,The requested attribute is not explicitly stated in the source document.
+35,4,Lesotho,no_answer,What is Lesotho's national animal?,verified,The requested attribute is not explicitly stated in the source document.
+36,5,Zimbabwe,no_answer,What is Zimbabwe's national flower?,verified,The requested attribute is not explicitly stated in the source document.
+37,6,Malawi,no_answer,What is Malawi's national flower?,verified,The requested attribute is not explicitly stated in the source document.
+38,7,Kenya,no_answer,What is Kenya's national flower?,verified,The requested attribute is not explicitly stated in the source document.
+39,8,Botswana,no_answer,What is Botswana's national flower?,verified,The requested attribute is not explicitly stated in the source document.
+40,9,Angola,no_answer,What is Angola's national animal?,verified,The requested attribute is not explicitly stated in the source document.
+41,0,Mozambique,multi_passage,"What role does Portuguese play in education, and what are the main activities described as the basis of Mozambique's economy?",verified,Both supporting passages were checked against the source document.
+42,1,Tanzania,multi_passage,"Which two Great Lakes are highlighted in Tanzania's geography, and what happened to the country's economy from the late 1970s?",verified,Both supporting passages were checked against the source document.
+43,2,South Africa,multi_passage,How does the article describe South Africa's political-geographic structure and its economic position in Africa?,verified,Both supporting passages were checked against the source document.
+44,3,Eswatini,multi_passage,"How did Eswatini's official name change in 2018, and what is the prevalent language identified in the article?",verified,Both supporting passages were checked against the source document.
+45,4,Lesotho,multi_passage,What are two main features of Lesotho's economy and currency system described in the article?,verified,Both supporting passages were checked against the source document.
+46,5,Zimbabwe,multi_passage,What does the article state about Zimbabwe's official languages and its economic decline from 1997 to 2008?,verified,Both supporting passages were checked against the source document.
+47,6,Malawi,multi_passage,What does the article say about Lake Malawi's biological richness and the country's economic dependence on agriculture?,verified,Both supporting passages were checked against the source document.
+48,7,Kenya,multi_passage,How does the article describe Kenya's cultural diversity and the sectors associated with recent economic expansion?,verified,Both supporting passages were checked against the source document.
+49,8,Botswana,multi_passage,How are Botswana's independence and the importance of its mineral industry described?,verified,Both supporting passages were checked against the source document.
+50,9,Angola,multi_passage,What does the article say about Cabinda's geographic status and the importance of oil and diamonds to Angola's economy?,verified,Both supporting passages were checked against the source document.
+51,0,Mozambique,no_answer,What is Mozambique's national bird?,verified,The requested attribute is not explicitly stated in the source document.
+52,1,Tanzania,no_answer,What is Tanzania's national bird?,verified,The requested attribute is not explicitly stated in the source document.
+53,2,South Africa,no_answer,What is South Africa's national bird?,verified,The requested attribute is not explicitly stated in the source document.
+54,3,Eswatini,no_answer,What is Eswatini's national bird?,verified,The requested attribute is not explicitly stated in the source document.
+55,4,Lesotho,no_answer,What is Lesotho's national bird?,verified,The requested attribute is not explicitly stated in the source document.
+56,5,Zimbabwe,no_answer,What is Zimbabwe's national bird?,verified,The requested attribute is not explicitly stated in the source document.
+57,6,Malawi,no_answer,What is Malawi's national bird?,verified,The requested attribute is not explicitly stated in the source document.
+58,7,Kenya,no_answer,What is Kenya's national bird?,verified,The requested attribute is not explicitly stated in the source document.
+59,8,Botswana,no_answer,What is Botswana's national bird?,verified,The requested attribute is not explicitly stated in the source document.
+60,9,Angola,no_answer,What is Angola's national bird?,verified,The requested attribute is not explicitly stated in the source document.
