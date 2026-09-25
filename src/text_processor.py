@@ -1,8 +1,7 @@
-"""Splits loaded documents into chunks"""
+"""Delar text i dokument i mindre delar = chunksS"""
 
 
 class TextProcessor:
-    """Take a document and divide it into smaller pieces called chunks."""
 
     def __init__(self, chunk_size: int = 1000):
         if chunk_size <= 0:

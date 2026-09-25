@@ -1,5 +1,5 @@
-"""Take text chunks and convert each chunk into a numerical vector 
-(embedding) that can later be used for similarity search."""
+""" Tar text chunks och konverterar varje chunk till en numerisk vektor
+(embedding) som kan användas för likhetsjämförelse. """
 
 from openai import OpenAI
 import numpy as np

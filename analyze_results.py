@@ -1,3 +1,5 @@
+""" Sammanställer, jämför och visualiserar resultaten från test_evaluation.py."""
+
 from pathlib import Path
 
 import pandas as pd
@@ -145,12 +147,12 @@ def plot_recall_by_question_type(
 ) -> None:
     """Plot Recall@3 by question type and chunk size."""
 
-    # No-answer questions do not have a Recall@3 value.
+    # No-answer frågor har inget Recall@3 värde.
     plot_data = summary[
         summary["question_type"] != "no_answer"
     ].copy()
 
-    # Replace Python-style names with report-friendly labels.
+    # Lägger till nya labels.
     plot_data["question_type"] = plot_data[
         "question_type"
     ].replace(
@@ -198,12 +200,12 @@ def plot_answer_correctness_by_question_type(
 ) -> None:
     """Plot answer correctness by question type and chunk size."""
 
-    # No-answer questions are evaluated separately.
+    # No-answer frågor utverderas separat.
     plot_data = summary[
         summary["question_type"] != "no_answer"
     ].copy()
 
-    # Replace Python-style names with report-friendly labels.
+    # Lägger till nya labels.
     plot_data["question_type"] = plot_data[
         "question_type"
     ].replace(

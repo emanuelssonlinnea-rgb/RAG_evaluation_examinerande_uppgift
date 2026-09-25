@@ -27,25 +27,25 @@ RAG-pipelinen fungerar i följande steg:
 
 ```text
 Dokument
-    ↓
+   ↓
 Dela upp i chunks
-    ↓
+   ↓
 Skapa embeddings
-    ↓
-Spara chunks + embeddings
-    ↓
+   ↓
+Behåll chunks + embeddings
+   ↓
 Användarfråga
-    ↓
+   ↓
 Skapa embedding för frågan
-    ↓
+   ↓
 Cosine similarity
-    ↓
+   ↓
 Hämta top 3 chunks
-    ↓
+   ↓
 Fråga + hämtad text
-    ↓
-OpenAI
-    ↓
+   ↓
+LLM
+   ↓
 Genererat svar
 
 ```
@@ -59,9 +59,13 @@ git clone https://github.com/emanuelssonlinnea-rgb/RAG_evaluation_examinerande_u
 
     python -m venv venv
 
-Windows PowerShell .venv\Scripts\Activate
+Windows PowerShell 
 
-macOS/Linux source .venv/bin/activate
+    venv\Scripts\Activate.ps1
+
+macOS/Linux 
+
+    source venv/bin/activate
 
 ### 3. Installera beroenden
 
@@ -98,7 +102,7 @@ Lägg in:
 ## Starta och testa RAG-systemet
 Testa systemet med exempel
 
-Projektet innehåller test.py, som används för att testa RAG-systemet med tre exempel:
+Projektet innehåller run_demo.py, som används för att testa RAG-systemet med tre exempel:
 
 - Single-passage-fråga
 - Multi-passage-fråga
@@ -106,7 +110,7 @@ Projektet innehåller test.py, som används för att testa RAG-systemet med tre 
 
 Kör:
 
-    python test.py
+    python run_demo.py
 
 Programmet visar bland annat:
 
@@ -186,12 +190,11 @@ RAG_evaluation/
 │   ├── retrieval_system.py
 │   └── text_processor.py
 │
-├── test.py
+├── run_demo.py
 ├── test_evaluation.py
 ├── analyze_results.py
 ├── README.md
 ├── report.md
 ├── requirements.txt
-├── .env
 └── .gitignore
 ```

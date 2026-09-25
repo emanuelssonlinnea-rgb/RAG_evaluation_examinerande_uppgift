@@ -1,6 +1,5 @@
-"""Generates answers by connecting openAI"""
+"""Kopplar ihop RAG-pipelinen och genererar svar med OpenAI."""
 
-import os
 from dotenv import load_dotenv
 
 from openai import OpenAI
@@ -16,8 +15,7 @@ class RAGSystem:
         load_dotenv()
         
         self.client = OpenAI()
-        self.api_key = os.getenv("OPENAI_API_KEY")
-
+        #Sätt ihop pipelinen
         self.loader = DocumentLoader("data/documents.csv")
         self.processor = TextProcessor(chunk_size=chunk_size)
         self.embeddings_manager = EmbeddingsManager()
@@ -26,7 +24,7 @@ class RAGSystem:
 
     def initialize_system(self):
 
-        # Load and process documents
+        # Ladda o processa dokument
         documents = self.loader.load_documents()
 
         self.chunks = []
@@ -36,15 +34,30 @@ class RAGSystem:
                 self.processor.split_into_chunks(doc)
             )
 
-        # Create embeddings
+        # Skapa embeddings
         self.embeddings = self.embeddings_manager.create_embeddings(
             self.chunks
         )
 
-        # Initialize retrieval system
+        # Starta retrieval systemet
         self.retrieval_system = RetrievalSystem(
             self.chunks,
             self.embeddings
+        )
+
+        # Användarfrågan embeddas och skickas att jämföras med befintliga chunks för att hitta topp 3 liknande
+    def retrieve_chunks(
+        self,
+        question: str,
+        top_k: int = 3,
+        ) -> list[tuple[str, float]]:
+        question_embedding = self.embeddings_manager.create_embeddings(
+            [question]
+        )[0]
+    
+        return self.retrieval_system.find_similar_chunks(
+            question_embedding,
+            top_k=top_k,
         )
 
     def answer_question(self, question: str) -> str:
@@ -53,30 +66,17 @@ class RAGSystem:
         context = "\n".join(
             chunk[0] for chunk in relevant_chunks
         )
-
+        # augmentationssteget: skickar kontext(topp 3 chunks) + användarfrågan till OpenAI
         prompt = f"""Context: {context}
 
     Question: {question}
 
     Answer:"""
-
+        # OpenAI genererar svar
         response = self.client.responses.create(
             model="gpt-5.6-luna",
             input=prompt,
         )
 
         return response.output_text
-
-    def retrieve_chunks(
-        self,
-        question: str,
-        top_k: int = 3,
-        ) -> list[tuple[str, float]]:
-        question_embedding = self.embeddings_manager.create_embeddings(
-            [question]
-    )[0]
-
-        return self.retrieval_system.find_similar_chunks(
-            question_embedding,
-            top_k=top_k,
-    )
+    

@@ -1,7 +1,6 @@
-"""Load csv documents from data folder"""
+"""Ladda csv dokument från data mapp"""
 
 import pandas as pd
-import os
 
 class DocumentLoader:
     def __init__(self, documents_path: str):

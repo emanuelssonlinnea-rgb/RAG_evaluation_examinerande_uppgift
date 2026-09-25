@@ -1,6 +1,8 @@
+"""Utvärderingslogiken för att utvärdera svarskvalitet"""
+
 from openai import OpenAI
 
-
+# jämför användarfrågan mot det förväntade/referenssvaret och RAG-systemets genererade svar
 def evaluate_answer(
     question: str,
     reference_answer: str,
@@ -40,8 +42,8 @@ Return only one score:
 
 Return only the number.
 """
-
-    response = client.responses.create(
+    # LLM as judge
+    response = client.responses.create(  
         model="gpt-5.6-luna",
         input=prompt,
     )
@@ -55,7 +57,7 @@ Return only the number.
 
     return float(score_text)
 
-
+ # Förstod systemet att informationen inte finns i dokumenten?
 def evaluate_no_answer(
     question: str,
     generated_answer: str,

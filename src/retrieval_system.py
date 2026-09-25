@@ -1,4 +1,4 @@
-"""Finding which chunks are most similar to a user's question."""
+"""Hittar vilka chunks som liknar användarfrågan mest."""
 
 import numpy as np
 

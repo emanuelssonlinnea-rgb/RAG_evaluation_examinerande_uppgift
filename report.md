@@ -1,7 +1,9 @@
 # Skriftlig rapport
 ## Syfte
 Med tanke på AIs framväxt och dess relation till datahantering ville jag fördjupa mig lite mer i ämnet – jag ville förstå mer om hur AI fungerar, hur man mäter dess resultat och hur olika designval påverkar resultatet. 
-RAG passade mitt projekt eftersom jag ville undersöka hur en språkmodell kan använda specifik information för att besvara frågor. Jag behövde inte träna om modellen, utan kunde istället hämta relevant information från mina dokument och skicka den som kontext till modellen. Det gjorde det lättare att följa retrieval processen när en fråga ställdes vilket var vad jag ville fokusera på.
+RAG passade mitt projekt eftersom jag ville undersöka hur en språkmodell kan använda specifik information för att besvara frågor. Jag behövde inte träna om modellen, utan kunde istället hämta relevant information från mina dokument och skicka den som kontext till modellen. Det gjorde det lättare att följa retrieval processen när en fråga ställdes vilket var vad jag ville fokusera på. Jag valde att titta på hur olika chunk-storlekar påverkar retrieval quality och answer correctness i ett RAG-system. Fokuserade på dessa två frågor:
+1. Hur förändras answer quality med olika chunk sizes?
+2. Vilket mätvärde visar störst variation?
 ## Området och dess relevans
 Data Science har utvecklat ett nära partnerskap med AI, där det fungerar som ett kraftfullt verktyg som data scientists bygger, tränar och använder för att lösa komplexa problem. Det är mer relevant än någonsin att Data Scientists utvecklar en djup förståelse för hur AI fungerar, hur det kan hjälpa oss i vårt arbete, men också när det inte fungerar och hur man kvalitetssäkrar resultatet.
 ## Viktiga begrepp
@@ -13,7 +15,7 @@ Chunks - Ett dokument delas upp i mindre textdelar som kan sökas och hämtas.
 ### Datasetet 
 Jag använde ursprungligen Single-Topic RAG Evaluation Dataset | Kaggle för det här projektet, men efter att ha byggt min pipeline och testat den insåg jag att det fanns ett stort problem med datasetet. Basdokumentet: ´documents.csv´,  verkade ha förlorat viss del av datan som behövdes för att besvara frågorna som tillhörde datasetet. När jag ställde frågor som egentligen skulle ha kunnat besvaras kunde modellen därför inte hitta svar i flera fall.
 Efter att ha testat detta och manuellt gått igenom att det skulle vara för tidskrävande att försöka identifiera och åtgärda det här datasetet så sökte vidare efter ett dataset. 
-Skapandet av ett eget dataset
+#### Skapandet av ett eget dataset
 Till en början försökte jag hitta andra färdiga dataset, men upplevde ofta att de inte passade den typ av RAG-utvärdering som jag ville genomföra. Därför valde jag istället att skapa ett eget dataset.
 Jag laddade ner 10 Wikipedia-artiklar om 10 olika länder i Afrika söder om Sahara och använde ChatGPT för att strukturera materialet och skapa frågor och svar enligt följande format.
 För varje en av de 10 artiklarna skapade jag:
@@ -41,8 +43,11 @@ Referenssvaren hölls medvetet separerade från den text som RAG-systemet har ti
 ##### Retrieval quality – kvalitet på informationshämtningen
 Att utvärdera retrieval quality i en RAG-pipeline innebär att undersöka om systemet hittar och rangordnar den information som behövs för att besvara användarens fråga innan informationen skickas vidare till språkmodellen.
 Jag hittade flera möjliga sätt att utvärdera detta, men med tanke på projektets tidsbegränsningar valde jag en relativt enkel utvärderingsmetrik: Recall@k, där k anger antalet av de högst rankade resultaten som utvärderas.
-Eftersom k = 3 i det här projektet använde jag Recall@3. Detta mäter andelen relevanta informationsdelar som återfinns bland de tre högst rankade resultaten, i förhållande till det totala antalet relevanta informationsdelar som finns tillgängliga.
-Eftersom RAG-systemet delar upp källdokumenten i chunks kommer den stödjande texten i all_questions.csv inte nödvändigtvis att vara identisk med en komplett chunk. Först testade jag att använda en överlappningströskel med osäkert resultat så sloppades. Istället skapades en stödtext: ´all_questions.csv´. För att kunna jämföra den stödjande texten med de hämtade chunkarna normaliserades både stödtexten och den hämtade texten genom att bland annat ta bort referenser, skiljetecken och extra mellanslag. Därefter kontrollerades om den normaliserade stödtexten återfanns i de tre högst rankade chunkarna.
+
+Eftersom k = 3 i det här projektet använde jag Recall@3. I min implementation definieras en träff genom att den normaliserade stödtexten måste återfinnas som en substring i de tre hämtade chunkarna. Mätvärdet mäter därför inte semantisk relevans direkt, utan om den fördefinierade stödtexten kan återfinnas i retrieval-resultatet.
+
+Eftersom RAG-systemet delar upp källdokumenten i chunks kommer den stödjande texten i all_questions.csv inte nödvändigtvis att vara identisk med en komplett chunk. 
+Jag testade först en överlappningströskel för att avgöra om en chunk innehöll tillräckligt mycket av stödtexten. Resultatet var svårt att tolka på ett tillförlitligt sätt, så jag valde istället en enklare och reproducerbar metod där den normaliserade stödtexten måste återfinnas i de hämtade chunkarna. Detta gjordes genom att skapa stödtexten: ´all_questions.csv´.
 
 ##### Answer correctness – svarens korrekthet
 Answer correctness mäter hur väl ett genererat svar överensstämmer med en fördefinierat referens- eller facitsvar, både när det gäller faktamässig korrekthet och semantisk innebörd.
@@ -58,11 +63,12 @@ No-answer handling  las till senare i projektet för att hantera andelen frågor
 Recall@3 mäter kvaliteten på informationshämtningen, answer correctness mäter kvaliteten på svaren på de frågor som faktiskt går att besvara, och no-answer handling rate mäter systemets förmåga att undvika osupporterade svar när den information som krävs saknas.
 ### Text processing
 #### Chunks
-Målet med projektet är att undersöka hur RAG-systemets kvalitet påverkas av olika chunk-storlekar. Jag valde tre olika chunk-storlekar: 500, 1000 och 1500 tecken. Syftet var inte att anta att någon av dem var optimal, utan att skapa tre olika experimentella nivåer. Jag höll resten av RAG-pipelinen konstant och ändrade endast chunk-storleken för att kunna undersöka hur den påverkade retrieval quality och answer correctness.
+Målet med projektet är att undersöka hur RAG-systemets kvalitet påverkas av olika chunk-storlekar. Jag valde tre olika chunk-storlekar baserade på antal tecken: 500, 1000 och 1500 tecken. Syftet var inte att anta att någon av dem var optimal, utan att skapa tre olika experimentella nivåer. Jag höll resten av RAG-pipelinen konstant och ändrade endast chunk-storleken för att kunna undersöka hur den påverkade retrieval quality och answer correctness.
+Mindre chunks kan göra retrieval mer precist eftersom varje chunk innehåller mindre information, men kan samtidigt göra att sammanhängande information delas upp. Större chunks kan däremot innehålla mer av det sammanhang som behövs för att besvara en fråga, men kan samtidigt innehålla mer irrelevant information.
 ### Embeddings
-Efter att dokumenten delats upp  skapas embeddings för varje chunk. Jag använde mig av ´text-embedding-3-small´ från OpenAi. Jag valde att inte lagra embeddings i en vektordatabas, istället behålls chunks och embeddings i Python-objekt och jämförs direkt. Projektet är litet och behöver inte vara skalbart så därmed valdes detta bort.
+Efter att dokumenten delats upp  skapas embeddings för varje chunk. Jag använde mig av ´text-embedding-3-small´ från OpenAi. Jag valde att inte lagra embeddings i en vektordatabas, istället behålls chunks och embeddings i Python-objekt och jämförs direkt. Nackdelen är att varje fråga kräver en jämförelse mot alla embeddings, vilket fungerar för det lilla datasetet men inte skulle vara lämpligt för mycket stora mängder dokument.
 ### Retrieval
-När användaren ställer en fråga skapas även en embedding för frågan. Sedan jämförs denna embedding med embeddings för alla chunks genom ´cosine similarity´. Det ger ett likhetsvärde mellan frågan och varje chunk. Sedan sorteras resultaten efter likhet och systemet hämtar de tre högst rankade chunkarna (top_k = 3). 
+När användaren ställer en fråga skapas en embedding för frågan. Sedan jämförs denna embedding med embeddings för alla chunks genom ´cosine similarity´. Cosine similarity jämför vinkeln mellan två vektorer, så ett högre värde innebär att vektorerna pekar mer åt samma håll och används därför som ett mått på semantisk likhet mellan frågan och chunken. Sedan sorteras resultaten efter likhet och systemet hämtar de tre högst rankade chunkarna (top_k = 3). 
 ### Generation
 De tre hämtade chunkarna kombineras sedan till ett kontext som skickas till ´GPT-5.6 Luna´.
 Modellen använder frågan tillsammans med den hämtade texten för att generera det slutliga svaret. 
@@ -126,13 +132,24 @@ I detta experiment hade chunk-storleken en tydligare effekt på retrieval qualit
 
 ## Begränsningar och möjliga förbättringar
 ### No-Answer frågorna 
-Resultatet visade tydligt att modellen inte kunde hantera frågorna väl oberoende av chunk storlek. Systemet saknade en mekanism för att på ett tillförlitligt sätt avgöra när information saknades. En möjlig förbättring av systemet är att införa en mekanism för att bedöma om den hämtade kontexten faktiskt innehåller tillräcklig information för att besvara frågan. I dess nuvarande stadie är jag osäker på om dess frågor tillför något till projektet så skulle nog slopa dem och fokusera på dem andra frågetyperna då dem relaterar mer till dem fokusfrågor som valdes. 
+Resultatet visar att no-answer-frågorna inte påverkades av chunk-storleken. Det tyder på att begränsningen främst ligger i systemets arkitektur snarare än i chunkingen. Den nuvarande implementationen saknar en separat mekanism för att avgöra om den hämtade kontexten innehåller tillräckligt stöd för ett svar. En möjlig vidareutveckling skulle därför vara att införa en answerability- eller confidence-threshold innan svaret genereras.
 ### Ingen overlap mellan chunks
 I den nuvarande implementationen används ingen overlap mellan chunks. Det innebär att relevant information som ligger nära gränsen mellan två chunks kan delas upp mellan dem. En möjlig förbättring skulle vara att använda chunk overlap , exempelvis att en viss del av föregående chunk inkluderas i nästa.
 ### LLM-as-a-judge är inte helt objektivt
 LLM-as-a-judge är praktiskt för ett mindre experiment, men det finns en risk att den utvärderande modellen gör bedömningar som en mänsklig expert skulle ha bedömt annorlunda.En möjlig förbättring skulle vara att använda flera olika LLMs eller andra metrics såsom mänsklig bedömning. 
+### Litet dataset
+Datasetet är relativt litet och består av 10 dokument och 60 frågor. Resultaten bör därför främst tolkas som observationer från detta experiment och inte som generella slutsatser om vilken chunk-storlek som fungerar bäst för RAG-system.
+
 ## Koppling till yrkesrollen
-Jag lärde mig att bygga en experimentell datapipeline där jag kan testa en AI-lösning, definiera mätvärden, kontrollera datakvalitet och analysera hur förändringar i systemet påverkar resultatet. En Data Scientist skulle kunna använda samma arbetssätt för att bygga och utvärdera AI-baserade system. 
+När jag antog mig projektet ville jag lära mig hur jag kunde bygga en experimentell datapipeline där jag kan testa en AI-lösning. Men nu vid dess slut har jag lärt mig så mycket mer färdigheter som är högst relevanta för en data scientist:
+- jag fick lära mig om flera olika mätvärden som används för AI-lösningar och hur jag definierade vad "bra" betyder
+- jag lärde mig hur jag skapar och kvalitetssäkrar dataset
+- hur man arbetar med LLM (OpenAI) för retrieval, generering och utvärdering
+- doppade tårna i hallucinationsproblematiken i LLMs genereringsprocess
+- jobbade på att testa och förbättra experimentet iterativt.
+- fick hantera trade-offs mellan olika val- exempel använda LLM-as-judge vilket inte är objektivt men en funktionell lösning för det här projektet.
+Allt detta och mycket mer som jag tror kommer att bli användbart i min roll. 
+
 ## Källor
 ### Dataset - Wikipedia
 - Mozambique (2026) https://en.wikipedia.org/wiki/Mozambique (Accessed: 19 September 2026).
@@ -146,31 +163,50 @@ Jag lärde mig att bygga en experimentell datapipeline där jag kan testa en AI-
 - Botswana (2026)https://en.wikipedia.org/wiki/Botswana (Accessed: 19 September 2026).
 - Angola (2026)	https://en.wikipedia.org/wiki/Angola (Accessed: 19 September 2026).
 
-Det ursprungliga datasetet:
+### Det ursprungliga datasetet:
 - Harris, Samuel Matsuo (2025) Single-Topic RAG Evaluation Dataset. Available at: https://www.kaggle.com/datasets/samuelmatsuoharris/single-topic-rag-evaluation-dataset?resource=download (Accessed: 26 August 2026).
 ### Artiklar
-- Yousefiniyae shad, Mazyar (2025) Building Your First RAG System with Python and OpenAI.Available at: https://dev.to/mazyaryousefinia/building-your-first-rag-system-with-python-and-openai-1326 (Accessed: 2 September 2026). 
+
 - Abdul Sami, Muhammad (2026) RAG Evaluation: How to Measure Retrieval Quality Before. Available at: https://hinterbuild.com/blog/rag-evaluation-measure-retrieval-quality#why-retrieval-first (Accessed: 31August 2026).
-- Kannappan, Ganesh (2024) Evaluation of Retrieval Augmented Generation (RAG) — Part 3. Available at: https://medium.com/@ganeshkannappan/evaluation-of-retrieval-augmented-generation-rag-part-3-ae7b085ceee5 (Accessed: 10 September 2026).
 - Evidently AI (2025) Precision and recall at K in ranking and recommendations. Available at: https://www.evidentlyai.com/ranking-metrics/precision-recall-at-k  (Accessed: 10 September 2026).
+- Kannappan, Ganesh (2024) Evaluation of Retrieval Augmented Generation (RAG) — Part 3. Available at: https://medium.com/@ganeshkannappan/evaluation-of-retrieval-augmented-generation-rag-part-3-ae7b085ceee5 (Accessed: 10 September 2026).
 - Mistral AI Team (2025) Evaluating RAG with LLM as a Judge. Available at: https://mistral.ai/news/llm-as-rag-judge/ (Accessed: 2 September 2026).
 - Nguyen , Xuan-Son (2024) Code a simple RAG from scratch. Available at: https://huggingface.co/blog/ngxson/make-your-own-rag (Accessed: 2 September 2026).
 - Patronus AI (2026) RAG Evaluation Metrics: Best Practices for Evaluating RAG Systems. Available at: https://www.patronus.ai/llm-testing/rag-evaluation-metrics (Accessed: 2 September 2026).
+- Yousefiniyae shad, Mazyar (2025) Building Your First RAG System with Python and OpenAI.Available at: https://dev.to/mazyaryousefinia/building-your-first-rag-system-with-python-and-openai-1326 (Accessed: 2 September 2026). 
 ### Youtube videos
-- Unfold Data Science (2025) Build Your First RAG App in 10 Minutes | RAG application tutorial | RAG application development [YouTube video]. Available at: https://www.youtube.com/watch?v=VeZXHb2VXtM [Accessed: 4 September 2026].
-- KodeKloud (2025) RAG Crash Course for Beginners [YouTube video]. Available at: https://www.youtube.com/watch?v=swvzKSOEluc [Accessed: 4 September 2026].
+
 - Grigorev, Alexey(2026) Build Your First RAG Application with LLMs - Alexey Grigorev [YouTube video]. Available at: https://www.youtube.com/watch?v=KSItlTAsMsk&t=1042s [Accessed: 3 September 2026].
+- KodeKloud (2025) RAG Crash Course for Beginners [YouTube video]. Available at: https://www.youtube.com/watch?v=swvzKSOEluc [Accessed: 4 September 2026].
+- Unfold Data Science (2025) Build Your First RAG App in 10 Minutes | RAG application tutorial | RAG application development [YouTube video]. Available at: https://www.youtube.com/watch?v=VeZXHb2VXtM [Accessed: 4 September 2026].
 
 # Självreflektion
 
-Jag lärde mig att bygga en experimentell datapipeline där jag kunde testa hur en språkmodell kan använda specifik information för att besvara frågor. Jag lärde mig hur embedding fungerar, vad chunks innebär och att overlap behövs för att inte missa information under retrieval delen. Jag kände mig väldigt osäker i mina tekniska val – LLM as a judge är som sagt inte objektiv och Recall@3 är enkel men kan missa semantiska detaljer eftersom det är avgränsat till k3. Om jag kunde ha börjat om med projektet skulle jag nog ha slopat no-answer frågorna då det behöver ett ytterligare hanteringssystem för att kolla om svaren finns och hur dem hanteras – jag hade stora svårigheter att lösa den delen i projektet.
-
-Något annat som jag hade svårt att greppa var hur embedding fungerade mellan retrieval och generationsdelen: När användaren ställer en fråga skapas även en embedding för frågan. Sedan jämförs denna embedding med embeddings för alla chunks. Så embeddings omvandlas inte tillbaka till text - systemet använder embeddingarna för att hitta rätt chunks. Därefter hämtas den ursprungliga texten från dessa chunks och skickas till språkmodellen. Jag har inte helt greppat det konceptet. 
-
-Det bästa tekniska valet jag gjorde var nog att skapa ett eget dataset då det tillät mig möjligheten att formattera dokumenten och frågorna som jag ville och lägga till saker när det behövdes. 
-
-Jag vill säga att jag gjort nog för ett VG:
--	Jag har byggt en RAG applikation
--	Testat olika metoder och gått igenom varför jag valde/valde bort dem
--	Förklarat mina val och dess styrkor och begränsningar
--	Använt tekniskt relevant språk och resonerat kring dem.
+## 1. Vad lärde du dig som du inte kunde innan?
+Jag lärde mig att bygga en experimentell datapipeline där jag kunde testa hur ett RAG-system kan använda specifik information för att besvara frågor. Jag lärde mig bland annat hur embeddings används för att representera text numeriskt, vad chunks innebär och hur retrieval-delen använder embeddings för att hitta relevanta textdelar. Detta var ett koncept som jag hade svårt att greppa i början, men som jag förstår betydligt bättre efter projektet.
+## 2. Vad var svårast att förstå eller genomföra?
+Det svåraste var framför allt att förstå hur olika delar av RAG-pipelinen hänger ihop, särskilt sambandet mellan embeddings, retrieval och generation.
+Jag hade också stora svårigheter med no-answer-frågorna. Systemet hämtar alltid de tre mest lika chunkarna, även när informationen som behövs för att besvara frågan inte finns i dokumenten. Det saknades därför en separat mekanism för att avgöra när systemet borde avstå från att svara. Detta gjorde no-answer-delen svårare att hantera än de andra frågetyperna.
+## 3. Vilket tekniskt val är du mest nöjd med och varför?
+Det tekniska val jag är mest nöjd med är att skapa ett eget dataset.
+Det ursprungliga datasetet som jag använde visade sig inte fungera tillräckligt bra för mitt experiment eftersom viss information som behövdes för att besvara frågorna saknades i dokumenten. Genom att skapa ett eget dataset kunde jag själv kontrollera dokumenten, frågorna, referenssvaren och de olika frågetyperna.
+## 4. Vad hade du gjort annorlunda om du började om?
+Om jag började om hade jag planerat no-answer-delen tydligare från början. Jag hade då antingen utvecklat en separat mekanism för att bedöma om den hämtade kontexten faktiskt innehåller tillräckligt med information för att besvara frågan, eller avgränsat experimentet till retrieval och answer correctness för besvarbara frågor.
+## 5. Vad skulle vara ett naturligt nästa steg om du fortsatte arbetet?
+Ett naturligt nästa steg skulle vara att förbättra retrieval- och evaluation-delen.
+Jag skulle exempelvis kunna testa chunk overlap och undersöka om information som ligger nära gränsen mellan två chunks då hämtas mer tillförlitligt. Jag skulle också kunna testa en större variation av chunk-storlekar och ett större dataset för att se om resultaten håller även när fler dokument och frågor används.
+En annan möjlig vidareutveckling skulle vara att införa en mekanism för att avgöra när systemet inte har tillräckligt med information för att besvara en fråga. Det skulle göra det möjligt att förbättra no-answer-hanteringen.
+## 6. Vilket betyg tycker du själv att arbetet motsvarar – G eller VG?
+Jag bedömer att arbetet motsvarar VG.
+## 7. Motivera din bedömning genom att koppla till kraven för G och VG.
+Jag anser att arbetet uppfyller kraven för G eftersom jag har byggt och genomfört en fungerande RAG-lösning, använt relevanta bibliotek och tekniker, genomfört ett experiment och analyserat resultaten.
+Jag anser samtidigt att arbetet uppfyller VG-kriterierna eftersom jag inte enbart har implementerat tekniken, utan även försökt förstå hur och varför de olika delarna fungerar och hur mina tekniska val påverkar resultatet.
+Jag har bland annat:
+- byggt en RAG-applikation med dokumentladdning, chunking, embeddings, retrieval och generering, 
+- testat olika chunk-storlekar och analyserat hur de påverkar retrieval quality och answer correctness, 
+- testat och utvärderat olika metoder och resonerat kring varför vissa val gjordes eller valdes bort, 
+- skapat ett eget dataset när det ursprungliga datasetet inte fungerade för experimentets syfte, 
+- använt tekniskt relevanta begrepp som embeddings, vectors, cosine similarity, Recall@3 och LLM-as-a-judge, 
+- identifierat styrkor och begränsningar i både lösningen och de valda mätvärdena, 
+- analyserat att förbättrad retrieval inte automatiskt innebär en motsvarande förbättring av answer correctness, 
+- identifierat möjliga förbättringar, exempelvis chunk overlap, bättre no-answer-hantering och mer avancerad retrieval evaluation. 

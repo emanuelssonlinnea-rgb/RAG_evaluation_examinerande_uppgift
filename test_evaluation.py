@@ -1,3 +1,5 @@
+"""Utvärderar svarskvaliteten på RAG systemet och sparar resultatet"""
+
 import argparse
 import re
 
@@ -13,7 +15,7 @@ def normalize_text(text: str) -> str:
     text = re.sub(r"[^a-zA-Z0-9]+", " ", text.lower())
     return " ".join(text.split())
 
-
+# Räknar ut Retrieval quality med recall@3
 def calculate_recall_at_3(
     supporting_evidence: list[str],
     retrieved_chunks: list[tuple[str, float]],
@@ -45,7 +47,7 @@ def calculate_recall_at_3(
 
     return found / len(relevant_evidence)
 
-
+# Kör hela testet på svarskvalitén
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--chunk-size", type=int, default=1000)
@@ -54,7 +56,7 @@ def main() -> None:
     # Load evaluation dataset
     questions = pd.read_csv("data/all_questions.csv")
 
-    # Initialize RAG system once
+    # initierar RAG systemet
     rag = RAGSystem(chunk_size=args.chunk_size)
 
     results = []
@@ -64,9 +66,7 @@ def main() -> None:
         question = question_data["question"]
         question_type = question_data["question_type"]
 
-        # -----------------------------
-        # Retrieval evaluation
-        # -----------------------------
+        # retrieval utvärdering
 
         supporting_evidence = [
             question_data["supporting_evidence_1"],
@@ -82,16 +82,11 @@ def main() -> None:
             supporting_evidence,
             retrieved_chunks,
         )
-
-        # -----------------------------
-        # Generate answer
-        # -----------------------------
+        # Genererar svar
 
         generated_answer = rag.answer_question(question)
 
-        # -----------------------------
-        # Answer evaluation
-        # -----------------------------
+        # svarar utvärderingen
 
         if question_type == "no_answer":
 
@@ -110,9 +105,7 @@ def main() -> None:
                 generated_answer,
             )
 
-        # -----------------------------
-        # Save result
-        # -----------------------------
+        # sparar resultatet
 
         results.append(
         {
@@ -135,18 +128,16 @@ def main() -> None:
             f"Answer correctness = {answer_correctness}"
         )
 
-    # Convert results to DataFrame
+    # konverterar resultat till en DataFrame
     results_df = pd.DataFrame(results)
 
-    # Save results
+    # Ssparar resultat
     results_df.to_csv(
     f"data/evaluation_results_{args.chunk_size}.csv",
     index=False,
     )
 
-    # -----------------------------
-    # Summary
-    # -----------------------------
+    # Summering
 
     mean_recall = results_df["recall_at_3"].mean()
     mean_answer_correctness = (
